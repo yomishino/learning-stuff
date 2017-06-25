@@ -7,7 +7,7 @@
  * @author yomishino
  * @version 1.0
  */
-public class Card implements Cloneable {
+public class Card {
     /** The value of the card. */
     private char value;
     /** A boolean indicating whether the card is facing up. */
@@ -95,14 +95,6 @@ public class Card implements Cloneable {
     public boolean equals(Card other) {
         return other != null && value == other.value;
     }
-
-    // /**
-    //  * Creates and returns a <i>shallow copy</i> of the object.
-    //  * @return An object which is the clone of this object.
-    //  */
-    // public Object clone() {
-    //     return super.clone();
-    // }
 
     public static void main(String[] args) {
         Card c = new Card('1');
