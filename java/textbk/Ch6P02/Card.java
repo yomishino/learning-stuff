@@ -25,6 +25,18 @@ public class Card {
     }
 
     /**
+     * Constructs a <code>Card</code> object from another
+     * <code>Card</code> object.
+     * This method is essentially a copy constructor that makes
+     * a deep copy of the original card.
+     * @param c A <code>Card</code> object from which a new
+     * <code>Card</code> object is to be constructed.
+     */
+    public Card(Card c) {
+        this(c.value);
+    }
+
+    /**
      * Gets the value of the card.
      * @return A <code>char</code> of the value of the card.
      */
@@ -94,14 +106,5 @@ public class Card {
      */
     public boolean equals(Card other) {
         return other != null && value == other.value;
-    }
-
-    public static void main(String[] args) {
-        Card c = new Card('1');
-        System.out.println(c.getShownFace());
-        c.reverseFace();
-        System.out.println(c.getShownFace());
-        c.reverseFace();
-        System.out.println(c.getShownFace());
     }
 }
