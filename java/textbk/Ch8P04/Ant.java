@@ -3,7 +3,7 @@
  * @author yomishino
  * @version 1.0
  */
-public class Ant extends Organism {
+class Ant extends Organism {
 
     /** Default frequency of breeding of an ant. */
     public static final int DEFAULT_BREED_CYCLE = 3;
@@ -14,7 +14,7 @@ public class Ant extends Organism {
     /** 
      * Constructs an <code>Ant</code> object that represents an ant.
      */
-    public Ant() {
+    Ant() {
         super();
     }
 
@@ -25,7 +25,7 @@ public class Ant extends Organism {
      * @return A <code>int</code> of the breeding cycle.
      */
     @Override
-    public int getBreedingCycle() {
+    int getBreedingCycle() {
         return DEFAULT_BREED_CYCLE;
     }
 
@@ -33,7 +33,7 @@ public class Ant extends Organism {
      * Draws the ant on the screen using a predefined representation.
      */
     @Override
-    public void draw() {
+    void draw() {
         System.out.print(REP_CHAR);
     }
 }

@@ -10,7 +10,7 @@
  * @author yomishino
  * @version 1.0
  */
-public class Doodlebug extends Organism {
+class Doodlebug extends Organism {
 
     /** Number of time steps the doodlebug has lived without eating. */
     private int timeHungary;
@@ -28,7 +28,7 @@ public class Doodlebug extends Organism {
      * Constructs a <code>Doodlebug</code> object that represents a
      * doodlebug.
      */
-    public Doodlebug() {
+    Doodlebug() {
         super();
         fed();
     }
@@ -37,7 +37,7 @@ public class Doodlebug extends Organism {
     /** 
      * Simulates the death from starvation of a doodlebug.
      */
-    public void starve() {
+    void starve() {
         die();
     }
 
@@ -46,7 +46,7 @@ public class Doodlebug extends Organism {
      * @param prey An <code>Organism</code> object representing
      * the organism to be eaten by this doodlebug.
      */
-    public void eat(Organism prey) {
+    void eat(Organism prey) {
         prey.die();
         fed();
     }
@@ -56,7 +56,7 @@ public class Doodlebug extends Organism {
      * Usually to be called at the beginning of the time step.
      */
     @Override
-    public void grow() {
+    void grow() {
         timeHungary++;
         super.grow();
     }
@@ -67,16 +67,8 @@ public class Doodlebug extends Organism {
      * @return A <code>int</code> of the breeding cycle.
      */
     @Override
-    public int getBreedingCycle() {
+    int getBreedingCycle() {
         return DEFAULT_BREED_CYCLE;
-    }
-
-    /**
-     * Draws the doodlebug on the screen using a char representation.
-     */
-    @Override
-    public void draw() {
-        System.out.print(REP_CHAR);
     }
 
     /**
@@ -88,7 +80,7 @@ public class Doodlebug extends Organism {
      * of the prey (only one if many preys exist); <code>null</code> if
      * no preys exist in the adjacent cells. 
      */
-    public int[] findPrey(Organism[] neighbours) {
+    int[] findPrey(Organism[] neighbours) {
         int[] pos = new int[2];
         for (Organism o : neighbours) {
             if (o != null && isPrey(o)) {
@@ -96,6 +88,18 @@ public class Doodlebug extends Organism {
             }
         }
         return null;
+    }
+
+    /**
+     * Checks if this doodlebug is starving and will soon die.
+     * <p>
+     * If a doodlebug has not eaten for time steps of
+     * {@value #DEFAULT_STARVE_TIME}, it is doomed to die.
+     * @return A <code>boolean</code> indicating whether the
+     * doodlebug is starving.
+     */
+    boolean isStarving() {
+        return timeHungary >= DEFAULT_STARVE_TIME;
     }
 
     /**
@@ -114,21 +118,17 @@ public class Doodlebug extends Organism {
     }
 
     /**
-     * Checks if this doodlebug is starving and will soon die.
-     * <p>
-     * If a doodlebug has not eaten for time steps of
-     * {@value #DEFAULT_STARVE_TIME}, it is doomed to die.
-     * @return A <code>boolean</code> indicating whether the
-     * doodlebug is starving.
-     */
-    public boolean isStarving() {
-        return timeHungary >= DEFAULT_STARVE_TIME;
-    }
-    
-    /**
      * Simulates the doodlebug's being fed.
      */
     private void fed() {
         timeHungary = 0;
+    }
+
+    /**
+     * Draws the doodlebug on the screen using a char representation.
+     */
+    @Override
+    void draw() {
+        System.out.print(REP_CHAR);
     }
 }
