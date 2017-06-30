@@ -6,7 +6,7 @@ import java.util.Random;
  * @author yomishino
  * @version 1.0
  */
-public abstract class Organism {
+abstract class Organism {
 
     /** Total time the organism has lived. */
     private int age;
@@ -23,7 +23,7 @@ public abstract class Organism {
     /**
      * Constructs an <code>Organism</code> object that represents an organism.
      */
-    public Organism() {
+    Organism() {
         age = 0;    // do not increment here
         alive = true;
         resetBreedTime();
@@ -38,7 +38,7 @@ public abstract class Organism {
      * @return A two-element array of <code>int</code> of the position
      * the organism has moved to.
      */
-    public int[] move(int r, int c) {
+    int[] move(int r, int c) {
         setPosition(r, c);
         return getPosition();
     }
@@ -51,7 +51,7 @@ public abstract class Organism {
      * @param c An <code>int</code> of the column index of the position.
      * @return An <code>Organism</code> object that is the new organism. 
      */
-    public Organism breed(int r, int c) {
+    Organism breed(int r, int c) {
         Organism newOrg = null;
         try {
             newOrg = getClass().newInstance();
@@ -74,7 +74,7 @@ public abstract class Organism {
      * @return A two-element array of <code>int</code> of the chosen
      * position.
      */
-    public int[] randomNearbyPosition(int height, int width) {
+    int[] randomNearbyPosition(int height, int width) {
         int choice, r, c;
         do {
             r = getPosition()[0];
@@ -104,7 +104,7 @@ public abstract class Organism {
      * @param r An <code>int</code> of the row index of the position.
      * @param c An <code>int</code> of the column index of the position.
      */
-    public void setPosition(int r, int c) {
+    void setPosition(int r, int c) {
         position[0] = r;
         position[1] = c;
     }
@@ -115,7 +115,7 @@ public abstract class Organism {
      * position of this organism.
      * @return A two-element array of the position of the organism.
      */
-    public int[] getPosition() {
+    int[] getPosition() {
         int[] p = new int[2];
         p[0] = position[0];
         p[1] = position[1];
@@ -125,7 +125,7 @@ public abstract class Organism {
     /**
      * Kills the organism.
      */
-    public void die() {
+    void die() {
         alive = false;
     }
 
@@ -134,7 +134,7 @@ public abstract class Organism {
      * @return A <code>boolean</code> indicating if the organism
      * is alive.
      */
-    public boolean isAlive() {
+    boolean isAlive() {
         return alive;
     }
 
@@ -142,7 +142,7 @@ public abstract class Organism {
      * Makes the organism one time step older.
      * Usually to be called at the beginning of the time step.
      */
-    public void grow() {
+    void grow() {
         age++;
         timeNotBreed++;
     }
@@ -151,7 +151,7 @@ public abstract class Organism {
      * Gets the current age of the organism.
      * @return A <code>int</code> of the age.
      */
-    public int getAge() {
+    int getAge() {
         return age;
     }
 
@@ -161,7 +161,7 @@ public abstract class Organism {
      * To be overriden by subclasses.
      * @return A <code>int</code> of the breeding cycle.
      */
-    public abstract int getBreedingCycle();
+    abstract int getBreedingCycle();
 
     /**
      * Checks if the organism is ready to breed, regardless of whether 
@@ -169,7 +169,7 @@ public abstract class Organism {
      * @return A <code>boolean</code> indicating whether the organism 
      * is ready for breeding.
      */
-    public boolean isReadyForBreeding() {
+    boolean isReadyForBreeding() {
         return timeNotBreed >= getBreedingCycle();
     }
 
@@ -178,7 +178,7 @@ public abstract class Organism {
      * To be overriden by subclasses according to their own char 
      * representation.
      */
-    public abstract void draw();
+    abstract void draw();
 
     /** 
      * Resets the time span the organism has not bred. 
