@@ -5,6 +5,8 @@ import java.util.Scanner;
  * which is lining up all suitors in a circle and eliminating every third
  * suitor, and for deciding which is the best position for the user so
  * that he (or she?) can cheat other suitors and marry the princess.
+ * @author yomishino
+ * @version 1.0
  */
 public class SuitorChoice {
     /** The list of suitors. */
@@ -83,6 +85,7 @@ public class SuitorChoice {
                 numSuitors = Integer.parseInt(sc.nextLine());
                 choice = new SuitorChoice(numSuitors);
                 valid = true;
+                sc.close();
             } catch (NumberFormatException e) {
                 System.out.println("\nPlease enter a positive integer.");
             } catch (IllegalArgumentException e) {

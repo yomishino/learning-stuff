@@ -30,7 +30,7 @@ public class CircularLinkedList<T> {
 
 
     /**
-     * A class of the iterator of a circular linked list.
+     * An iterator class of a circular linked list.
      */
     public class CircularLinkedListIterator {
         /** The current position in the list. */
@@ -180,7 +180,7 @@ public class CircularLinkedList<T> {
         Node<T> current = head;
         String s = "";
         do {
-            s += current.data == null ? "" : current.data.toString();
+            s += current.data == null ? "<null>" : current.data.toString();
             s += " ";
             current = current.link;
         } while (current != head);
