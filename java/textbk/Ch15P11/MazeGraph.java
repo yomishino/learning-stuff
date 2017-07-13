@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 /**
@@ -64,25 +63,42 @@ public class MazeGraph {
             this.west = west;
         }
 
-        // /**
-        //  * Returns a human-readable string representation of this node,
-        //  * showing its label and the the rooms it links to.
-        //  * @return A string representation of this node.
-        //  */
-        // @Override
-        // @Deprecated
-        // public String toString() {
-        //     String s = label + ": {";
-        //     if (north != null)
-        //         s += " N: " + north.label + ",";
-        //     if (south != null)
-        //         s += " S: " + south.label + ",";
-        //     if (east != null)
-        //         s += " E: " + east.label + ",";
-        //     if (west != null)
-        //         s += " W: " + east.label + " }";
-        //     return s;
-        // }
+        /**
+         * Checks if the given object is equal to this node.
+         * @param other An object to be checked.
+         * @return true if they are equal; false otherwise.
+         */
+        @Override
+        public boolean equals(Object other) {
+            if (other == null)
+                return false;
+            else if (getClass() != other.getClass())
+                return false;
+            else {
+                MazeNode node = (MazeNode) other;
+                if (!label.equals(node.label))
+                    return false;
+                return north == node.north && south == node.south
+                        && east == node.east && west == node.west;
+                    // references to same node or not
+            }
+        }
+
+        /**
+         * Returns a human-readable string representation of
+         * this node.
+         * @return The string representation of this node.
+         */
+        @Override
+        public String toString() {
+            String s = label + ": {  ";
+            s += north == null ? "" : ("[N] " + north.label + "  ");
+            s += south == null ? "" : ("[S] " + south.label + "  ");
+            s += east == null ? "" : ("[E] " + east.label + "  ");
+            s += west == null ? "" : ("[W] " + west.label + "  ");
+            s += "}";
+            return s;
+        }
     }    // End of MazeNode class
 
 
@@ -105,32 +121,16 @@ public class MazeGraph {
     /**
      * Constructs a graph representing a maze, with the initial size set.
      * <p>
-     * The choice of an initial size does not put a restriction on
-     * the actual maze size, and the actual size can be expanded any time
-     * if needed, although the choice of size may have an impact on 
-     * efficency.
+     * The choice of an initial size is only an indication of how
+     * large the maze would probably be after adding all room nodes.
+     * There is no need for the actual maze size to be the same as
+     * the specified initial size.
      * @param size The (initial) number of rooms in the maze.
      */
     public MazeGraph(int size){
-        this(size, null, null);
-    }
-
-    /**
-     * Constructs a graph representing a maze, with the initial size and
-     * the start and the goal room set.
-     * <p>
-     * The choice of an initial size does not put a restriction on
-     * the actual maze size, and the actual size can be expanded any time
-     * if needed, although the choice of size may have an impact on 
-     * efficency.
-     * @param size The (initial) number of rooms in the maze.
-     * @param start The start room.
-     * @param goal The goal room.
-     */
-    public MazeGraph(int size, MazeNode start, MazeNode goal) {
+        start = null;
+        goal = null;
         rooms = new ArrayList<>(size);
-        this.start = start;
-        this.goal = goal;
     }
 
     /**
@@ -240,7 +240,7 @@ public class MazeGraph {
             throw new IllegalArgumentException("Label is empty.");
         if (contains(label))
             return false;
-        Node<T> newRoom = new MazeNode(label);
+        MazeNode newRoom = new MazeNode(label);
         if (rooms.add(newRoom)) {
             setNorthFor(label, north);
             setSouthFor(label, south);
@@ -305,12 +305,15 @@ public class MazeGraph {
         MazeNode current = getNode(thisRoom);
         if (current == null)
             throw new NoSuchElementException("No such a room: " + thisRoom);
-        if (north.length() == 0)
+        if (north.length() == 0) {
+            if (current.north != null)
+                current.north.south = null;
             current.north = null;
+        }
         else {
+            addRoom(north);      // will add only if not exist
             MazeNode other = getNode(north);
-            if (other == null)
-                other = new MazeNode(north);
+            removeLinkBetween(thisRoom, north);
             current.north = other;
             other.south = current;
         }
@@ -340,12 +343,15 @@ public class MazeGraph {
         MazeNode current = getNode(thisRoom);
         if (current == null)
             throw new NoSuchElementException("No such a room: " + thisRoom);
-        if (south.length() == 0)
+        if (south.length() == 0) {
+            if (current.south != null)
+                current.south.north = null;
             current.south = null;
+        }
         else {
+            addRoom(south);      // will add only if not exist
             MazeNode other = getNode(south);
-            if (other == null)
-                other = new MazeNode(south);
+            removeLinkBetween(thisRoom, south);
             current.south = other;
             other.north = current;
         }
@@ -375,12 +381,15 @@ public class MazeGraph {
         MazeNode current = getNode(thisRoom);
         if (current == null)
             throw new NoSuchElementException("No such a room: " + thisRoom);
-        if (east.length() == 0)
+        if (east.length() == 0) {
+            if (current.east != null)
+                current.east.west = null;
             current.east = null;
+        }
         else {
+            addRoom(east);      // will add only if not exist
             MazeNode other = getNode(east);
-            if (other == null)
-                other = new MazeNode(east);
+            removeLinkBetween(thisRoom, east);
             current.east = other;
             other.west = current;
         }
@@ -410,12 +419,15 @@ public class MazeGraph {
         MazeNode current = getNode(thisRoom);
         if (current == null)
             throw new NoSuchElementException("No such a room: " + thisRoom);
-        if (west.length() == 0)
+        if (west.length() == 0) {
+            if (current.west != null)
+                current.west.east = null;
             current.west = null;
+        }
         else {
+            addRoom(west);      // will add only if not exist
             MazeNode other = getNode(west);
-            if (other == null)
-                other = new MazeNode(west);
+            removeLinkBetween(thisRoom, west);
             current.west = other;
             other.east = current;
         }
@@ -506,6 +518,42 @@ public class MazeGraph {
     }
 
     /**
+     * Removes the link between the two rooms with the given label.
+     * @param room1 The label for the first room.
+     * @param room2 The label for the second room.
+     * @throws NoSuchElementException if no room in the maze that
+     * has either of the given label.
+     * @throws IllegalArgumentException If either of the labels
+     * is the empty string.
+     */
+    public void removeLinkBetween(String room1, String room2) {
+        if (room1.length() == 0 || room2.length() == 0)
+            throw new IllegalArgumentException("Label is empty.");
+        MazeNode n1 = getNode(room1);
+        MazeNode n2 = getNode(room2);
+        if (n1 == null)
+            throw new NoSuchElementException("No such a room: " + room1);
+        if (n2 == null)
+            throw new NoSuchElementException("No such a room: " + room2);
+        if (n1.north == n2) {
+            n1.north = null;
+            n2.south = null;
+        }
+        if (n1.south == n2) {
+            n1.south = null;
+            n2.north = null;
+        }
+        if (n1.east == n2) {
+            n1.east = null;
+            n2.west = null;
+        }
+        if (n1.west == n2) {
+            n1.west = null;
+            n2.east = null;
+        }
+    }
+
+    /**
      * Checks if the maze graph contains a node with the given label.
      * @param label The label of the room node.
      * @return true if the graph contains the node, false otherwise.
@@ -541,6 +589,171 @@ public class MazeGraph {
     }
 
     /**
+     * Checks if the room has a link to another room in 
+     * the north direction.
+     * @param room The label of the room to be checked.
+     * @return true if the room has a north room, false otherwise.
+     * @throws NoSuchElementException if no room with the given label
+     * can be found in the maze.
+     */
+    public boolean canGoNorth(String room) {
+        MazeNode current = getNode(room);
+        if (current == null)
+            throw new NoSuchElementException("No such a room: " + room);
+        return current.north != null;
+    }
+
+    /**
+     * Checks if the room has a link to another room in 
+     * the south direction.
+     * @param room The label of the room to be checked.
+     * @return true if the room has a south room, false otherwise.
+     * @throws NoSuchElementException if no room with the given label
+     * can be found in the maze.
+     */
+    public boolean canGoSouth(String room) {
+        MazeNode current = getNode(room);
+        if (current == null)
+            throw new NoSuchElementException("No such a room: " + room);
+        return current.south != null;
+    }
+
+    /**
+     * Checks if the room has a link to another room in 
+     * the east direction.
+     * @param room The label of the room to be checked.
+     * @return true if the room has an east room, false otherwise.
+     * @throws NoSuchElementException if no room with the given label
+     * can be found in the maze.
+     */
+    public boolean canGoEast(String room) {
+        MazeNode current = getNode(room);
+        if (current == null)
+            throw new NoSuchElementException("No such a room: " + room);
+        return current.east != null;
+    }
+
+    /**
+     * Checks if the room has a link to another room in 
+     * the west direction.
+     * @param room The label of the room to be checked.
+     * @return true if the room has a west room, false otherwise.
+     * @throws NoSuchElementException if no room with the given label
+     * can be found in the maze.
+     */
+    public boolean canGoWest(String room) {
+        MazeNode current = getNode(room);
+        if (current == null)
+            throw new NoSuchElementException("No such a room: " + room);
+        return current.west != null;
+    }
+
+    /**
+     * Gets the label of the room to the north of this room as specified
+     * by the given label.
+     * @param thisRoom The label of the room to be checked.
+     * @return The label of the north room; {@literal "<null>"} if there
+     * is no room linked to this room in the north direction.
+     * @throws NoSuchElementException if no room with the given label
+     * can be found in the maze.
+     */
+    public String northRoom(String thisRoom) {
+        MazeNode current = getNode(thisRoom);
+        if (current == null)
+            throw new NoSuchElementException("No such a room: " + thisRoom);
+        return current.north == null ? "<null>" : current.north.label;
+    }
+
+    /**
+     * Gets the label of the room to the south of this room as specified
+     * by the given label.
+     * @param thisRoom The label of the room to be checked.
+     * @return The label of the south room; {@literal "<null>"} if there
+     * is no room linked to this room in the south direction.
+     * @throws NoSuchElementException if no room with the given label
+     * can be found in the maze.
+     */
+    public String southRoom(String thisRoom) {
+        MazeNode current = getNode(thisRoom);
+        if (current == null)
+            throw new NoSuchElementException("No such a room: " + thisRoom);
+        return current.south == null ? "<null>" : current.south.label;
+    }
+
+    /**
+     * Gets the label of the room to the east of this room as specified
+     * by the given label.
+     * @param thisRoom The label of the room to be checked.
+     * @return The label of the east room; {@literal "<null>"} if there
+     * is no room linked to this room in the east direction.
+     * @throws NoSuchElementException if no room with the given label
+     * can be found in the maze.
+     */
+    public String eastRoom(String thisRoom) {
+        MazeNode current = getNode(thisRoom);
+        if (current == null)
+            throw new NoSuchElementException("No such a room: " + thisRoom);
+        return current.east == null ? "<null>" : current.east.label;
+    }
+
+    /**
+     * Gets the label of the room to the west of this room as specified
+     * by the given label.
+     * @param thisRoom The label of the room to be checked.
+     * @return The label of the west room; {@literal "<null>"} if there
+     * is no room linked to this room in the west direction.
+     * @throws NoSuchElementException if no room with the given label
+     * can be found in the maze.
+     */
+    public String westRoom(String thisRoom) {
+        MazeNode current = getNode(thisRoom);
+        if (current == null)
+            throw new NoSuchElementException("No such a room: " + thisRoom);
+        return current.west == null ? "<null>" : current.west.label;
+    }
+
+    /**
+     * Checks if the given object is equal to this maze graph.
+     * @param other An object to be checked.
+     * @return true if they are equal, false otherwise.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other == null)
+            return false;
+        else if (getClass() != other.getClass())
+            return false;
+        else {
+            MazeGraph g = (MazeGraph) other;
+            if (start == null && g.start != null)
+                return false;
+            else if (!start.equals(g.start))
+                return false;
+            if (goal == null && g.goal != null)
+                return false;
+            else if (!goal.equals(g.goal))
+                return false;
+            return rooms.equals(g.rooms);
+        }
+    }
+
+    /**
+     * Returns a human-redable string representation of this maze graph.
+     * @return The string representation of this graph.
+     */
+    @Override
+    public String toString() {
+        String s = "";
+        for (MazeNode node : rooms) {
+            s += node.toString();
+            s += "\n";
+        }
+        s += "Start: " + startRoom() + "\n";
+        s += "Goal: " + goalRoom();
+        return s;
+    }
+
+    /**
      * Gets the node with the given label from the ArrayList of nodes.
      * @param label The label of the room
      * @return The reference to the node; <code>null</code> if there
@@ -556,4 +769,75 @@ public class MazeGraph {
         return null;
     }
 
+
+    private static void test1() {
+        MazeGraph g = new MazeGraph(6);
+        g.addRoom("A");
+        g.addRoom("B");
+        g.addRoom("C");
+        g.addRoom("D");
+        g.addRoom("E");
+        g.addRoom("F");
+        // System.out.println(g);
+        // System.out.println();
+
+        g.setStart("A");
+        g.setGoal("E");
+        // System.out.println(g);
+        // System.out.println();
+
+        /*
+                 A -- B -- D
+                 |    |
+            F -- C    E
+         */
+        g.setEastFor("A", "B");
+        g.setSouthFor("A", "C");
+        g.setWestFor("C", "F");
+        g.setNorthFor("E", "B");
+        g.setEastFor("B", "D");
+        // System.out.println(g);
+        // System.out.println();
+
+        // repetitive add
+        g.setWestFor("B", "A");
+        // System.out.println(g);
+        // System.out.println();
+
+        // change link
+        g.resetLinksFor("E");
+        // System.out.println(g);
+        // System.out.println();
+        g.setSouthFor("B", "E");
+        // System.out.println(g);
+        // System.out.println();
+        g.setNorthFor("B", "D");  // move D to the north of B
+        // System.out.println(g);
+        // System.out.println();
+        g.resetSouthFor("D");
+        g.setEastFor("B", "D");     // move back
+        g.setNorthFor("B", "G");    // add a G to the north of B
+        // System.out.println(g);
+        // System.out.println();
+
+        // System.out.println(g.contains("C") + " == true ?");
+        // System.out.println(g.contains("H") + " == false ?");
+
+        // System.out.println(g.canGoEast("F") + " == true ?");
+        // System.out.println(g.canGoSouth("D") + " == false ?");
+        // System.out.println(g.westRoom("A") + " == <null> ?");
+        // System.out.println(g.northRoom("C") + " == A ?");
+
+        g.resetAllLinks();
+        // System.out.println(g);
+        // System.out.println();
+        g.setEastFor("A", "C");
+        g.clear();
+        // System.out.println(g);
+        // System.out.println();
+    }
+
+    public static void main(String[] args) {
+        test1();
+    }
 }
