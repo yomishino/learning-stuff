@@ -541,6 +541,36 @@ public class MazeGraph {
     }
 
     /**
+     * TODO: implements the ? algo to find a path out of the maze.
+     * @return A string representation of path found; the empty string
+     * if there is no path out of the maze.
+     */
+    public String shortestPath() {
+        // TODO
+        return "";
+    }
+
+    /**
+     * TODO: Check if the current maze is solvable, via shortestPath().
+     */
+    public boolean isSolvable() {
+        // TODO
+        return true;
+    }
+
+    /**
+     * TODO: Implements a randomwalk strategy.
+     * The length will only be up to a certain number,
+     * if the maze is unsolvable.
+     * @param length The length of the walk.
+     * @return A string representation of the path walked.
+     */
+    public String randomWalk(int length) {
+        // TODO
+        return "";
+    }
+
+    /**
      * Gets the node with the given label from the ArrayList of nodes.
      * @param label The label of the room
      * @return The reference to the node; <code>null</code> if there
