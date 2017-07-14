@@ -732,6 +732,30 @@ public class MazeGraph {
     }
 
     /**
+     * Counts how many links to other rooms this room as specified
+     * by the given label has.
+     * @param thisRoom The label of the room to be checked.
+     * @return The number of links.
+     * @throws NoSuchElementException if no room with the given label
+     * can be found in the maze.
+     */
+    public int countLinks(String thisRoom) {
+        MazeNode current = getNode(thisRoom);
+        if (current == null)
+            throw new NoSuchElementException("No such a room: " + thisRoom);
+        int count = 0;
+        if (current.north != null)
+            count++;
+        if (current.south != null)
+            count++;
+        if (current.east != null)
+            count++;
+        if (current.west != null)
+            count++;
+        return count;
+    }
+
+    /**
      * Checks if the given object is equal to this maze graph.
      * @param other An object to be checked.
      * @return true if they are equal, false otherwise.
@@ -857,6 +881,6 @@ public class MazeGraph {
     }
 
     public static void main(String[] args) {
-        test1();
+        // test1();
     }
 }
