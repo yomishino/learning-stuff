@@ -124,7 +124,7 @@ public class MazeGraph {
      * The choice of an initial size is only an indication of how
      * large the maze would probably be after adding all room nodes.
      * There is no need for the actual maze size to be the same as
-     * the specified initial size.
+     * the specified initial size, although this is preferable.
      * @param size The (initial) number of rooms in the maze.
      */
     public MazeGraph(int size){
@@ -255,10 +255,8 @@ public class MazeGraph {
      * Removes the room with the specified label from the maze.
      * Any room that previously linked to the removed room will have
      * the corresponding link set to null automatically.
-     * <p>
-     * Since a room with the empty string as its label is not permitted,
-     * if the empty string is passed as the argument,
-     * this method will simply return false.
+     * If the room to be removed is the start or the goal room of
+     * the maze, then the start or goal room will also be reset.
      * @param label The label of the room to be removed.
      * @return true if the room is removed, 
      * false if the given label is empty or the a room with the given
@@ -278,6 +276,10 @@ public class MazeGraph {
             toRm.east.west = null;
         if (toRm.west != null)
             toRm.west.east = null;
+        if (start == toRm)
+            start = null;
+        if (goal == toRm)
+            goal = null;
         return rooms.remove(toRm);
     }
 
@@ -296,12 +298,12 @@ public class MazeGraph {
      * the empty string if no room to link in this direction.
      * @throws NoSuchElementException If there is no room in the maze
      * that has a label as given in <code>thisRoom</code>.
-     * @throws IllegalArgumentException If <code>thisRoom</code> is 
-     * the empty string.
+    //  * @throws IllegalArgumentException If <code>thisRoom</code> is 
+    //  * the empty string.
      */
     public void setNorthFor(String thisRoom, String north) {
-        if (thisRoom.length() == 0)
-            throw new IllegalArgumentException("Label is empty.");
+        // if (thisRoom.length() == 0)
+        //     throw new IllegalArgumentException("Label is empty.");
         MazeNode current = getNode(thisRoom);
         if (current == null)
             throw new NoSuchElementException("No such a room: " + thisRoom);
@@ -334,12 +336,12 @@ public class MazeGraph {
      * the empty string if no room to link in this direction.
      * @throws NoSuchElementException If there is no room in the maze
      * that has a label as given in <code>thisRoom</code>.
-     * @throws IllegalArgumentException If <code>thisRoom</code> is 
-     * the empty string.
+    //  * @throws IllegalArgumentException If <code>thisRoom</code> is 
+    //  * the empty string.
      */
     public void setSouthFor(String thisRoom, String south) {
-        if (thisRoom.length() == 0)
-            throw new IllegalArgumentException("Label is empty.");
+        // if (thisRoom.length() == 0)
+        //     throw new IllegalArgumentException("Label is empty.");
         MazeNode current = getNode(thisRoom);
         if (current == null)
             throw new NoSuchElementException("No such a room: " + thisRoom);
@@ -372,12 +374,12 @@ public class MazeGraph {
      * the empty string if no room to link in this direction.
      * @throws NoSuchElementException If there is no room in the maze
      * that has a label as given in <code>thisRoom</code>.
-     * @throws IllegalArgumentException If <code>thisRoom</code> is 
-     * the empty string.
+    //  * @throws IllegalArgumentException If <code>thisRoom</code> is 
+    //  * the empty string.
      */
     public void setEastFor(String thisRoom, String east) {
-        if (thisRoom.length() == 0)
-            throw new IllegalArgumentException("Label is empty.");
+        // if (thisRoom.length() == 0)
+        //     throw new IllegalArgumentException("Label is empty.");
         MazeNode current = getNode(thisRoom);
         if (current == null)
             throw new NoSuchElementException("No such a room: " + thisRoom);
@@ -410,12 +412,12 @@ public class MazeGraph {
      * the empty string if no room to link in this direction.
      * @throws NoSuchElementException If there is no room in the maze
      * that has a label as given in <code>thisRoom</code>.
-     * @throws IllegalArgumentException If <code>thisRoom</code> is 
-     * the empty string.
+    //  * @throws IllegalArgumentException If <code>thisRoom</code> is 
+    //  * the empty string.
      */
     public void setWestFor(String thisRoom, String west) {
-        if (thisRoom.length() == 0)
-            throw new IllegalArgumentException("Label is empty.");
+        // if (thisRoom.length() == 0)
+        //     throw new IllegalArgumentException("Label is empty.");
         MazeNode current = getNode(thisRoom);
         if (current == null)
             throw new NoSuchElementException("No such a room: " + thisRoom);
@@ -442,8 +444,8 @@ public class MazeGraph {
      * @param label The label of the room.
      * @throws NoSuchElementException If there is no room in the maze
      * that has the given label.
-     * @throws IllegalArgumentException If <code>label</code> is the
-     * empty string.
+    //  * @throws IllegalArgumentException If <code>label</code> is the
+    //  * empty string.
      */
     public void resetNorthFor(String label) {
         setNorthFor(label, "");
@@ -458,8 +460,8 @@ public class MazeGraph {
      * @param label The label of the room.
      * @throws NoSuchElementException If there is no room in the maze
      * that has the given label.
-     * @throws IllegalArgumentException If <code>label</code> is the
-     * empty string.
+    //  * @throws IllegalArgumentException If <code>label</code> is the
+    //  * empty string.
      */
     public void resetSouthFor(String label) {
         setSouthFor(label, "");
@@ -474,8 +476,8 @@ public class MazeGraph {
      * @param label The label of the room.
      * @throws NoSuchElementException If there is no room in the maze
      * that has the given label.
-     * @throws IllegalArgumentException If <code>label</code> is the
-     * empty string.
+    //  * @throws IllegalArgumentException If <code>label</code> is the
+    //  * empty string.
      */
     public void resetEastFor(String label) {
         setEastFor(label, "");
@@ -490,8 +492,8 @@ public class MazeGraph {
      * @param label The label of the room.
      * @throws NoSuchElementException If there is no room in the maze
      * that has the given label.
-     * @throws IllegalArgumentException If <code>label</code> is the
-     * empty string.
+    //  * @throws IllegalArgumentException If <code>label</code> is the
+    //  * empty string.
      */
     public void resetWestFor(String label) {
         setWestFor(label, "");
@@ -507,8 +509,8 @@ public class MazeGraph {
      * @param label The label of the room.
      * @throws NoSuchElementException If there is no room in the maze
      * that has the given label.
-     * @throws IllegalArgumentException If <code>label</code> is the
-     * empty string.
+    //  * @throws IllegalArgumentException If <code>label</code> is the
+    //  * empty string.
      */
     public void resetLinksFor(String label) {
         resetNorthFor(label);
@@ -523,12 +525,12 @@ public class MazeGraph {
      * @param room2 The label for the second room.
      * @throws NoSuchElementException if no room in the maze that
      * has either of the given label.
-     * @throws IllegalArgumentException If either of the labels
-     * is the empty string.
+    //  * @throws IllegalArgumentException If either of the labels
+    //  * is the empty string.
      */
     public void removeLinkBetween(String room1, String room2) {
-        if (room1.length() == 0 || room2.length() == 0)
-            throw new IllegalArgumentException("Label is empty.");
+        // if (room1.length() == 0 || room2.length() == 0)
+        //     throw new IllegalArgumentException("Label is empty.");
         MazeNode n1 = getNode(room1);
         MazeNode n2 = getNode(room2);
         if (n1 == null)
@@ -573,6 +575,23 @@ public class MazeGraph {
      */
     public void clear() {
         rooms.clear();
+        start = null;
+        goal = null;
+    }
+
+    /**
+     * Removes all room nodes from the maze and indicates a
+     * new size for the maze.
+     * @param size The new size of the maze; it is preferable but
+     * not required to have the actual size of the maze to be
+     * of this indicated size.
+     */
+    public void reset(int size) {
+        rooms.clear();
+        start = null;
+        goal = null;
+        rooms.trimToSize();
+        rooms.ensureCapacity(size);
     }
 
     /**
@@ -817,8 +836,8 @@ public class MazeGraph {
         g.resetSouthFor("D");
         g.setEastFor("B", "D");     // move back
         g.setNorthFor("B", "G");    // add a G to the north of B
-        // System.out.println(g);
-        // System.out.println();
+        System.out.println(g);
+        System.out.println();
 
         // System.out.println(g.contains("C") + " == true ?");
         // System.out.println(g.contains("H") + " == false ?");
@@ -829,12 +848,12 @@ public class MazeGraph {
         // System.out.println(g.northRoom("C") + " == A ?");
 
         g.resetAllLinks();
-        // System.out.println(g);
-        // System.out.println();
+        System.out.println(g);
+        System.out.println();
         g.setEastFor("A", "C");
         g.clear();
-        // System.out.println(g);
-        // System.out.println();
+        System.out.println(g);
+        System.out.println();
     }
 
     public static void main(String[] args) {
