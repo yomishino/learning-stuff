@@ -1,4 +1,9 @@
--- Write a function that returns the element before the last
+{-
+    Author: yomishino
+
+    Chapter 2, Exercise 2
+    Write a function that returns the element before the last.
+-}
 
 lastButOne :: [a] -> a
 lastButOne [] = error "list too short"
