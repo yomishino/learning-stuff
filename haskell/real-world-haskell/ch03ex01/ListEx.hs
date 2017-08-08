@@ -1,7 +1,7 @@
 {-
     Author: yomishino
 
-    Chapter 3, Exercise 1
+    Chapter 3, Exercise 1 (halfway)
     Write a function that takes a List a and generates a [a].
 -}
 
