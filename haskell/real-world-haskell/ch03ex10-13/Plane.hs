@@ -16,7 +16,7 @@ data Point = Point {
         ptY :: Double
     } deriving (Show, Eq)
 
-data Direction = TurnLeft | TurnRight | StraightLine
+data Direction = LeftTurn | RightTurn | StraightLine
     deriving Show
 
 
@@ -27,8 +27,8 @@ data Direction = TurnLeft | TurnRight | StraightLine
 -- from the line segment /ab/ to the line segment /bc/.
 whichDirection :: Point -> Point -> Point -> Direction
 whichDirection a b c
-    | cross > 0     = TurnLeft
-    | cross < 0     = TurnRight
+    | cross > 0     = LeftTurn
+    | cross < 0     = RightTurn
     | otherwise     = StraightLine
     where cross = (x2 - x1) * (y3 - y2) - ((y2 - y1) * (x3 - x2))
           x1 = ptX a
@@ -49,3 +49,5 @@ whichDirection a b c
 directions :: [Point] -> [Direction]
 directions (x:(y:(z:zs))) = (whichDirection x y z):(directions (y:(z:zs)))
 directions _ = []
+
+
